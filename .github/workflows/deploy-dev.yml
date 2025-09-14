@@ -35,10 +35,17 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Echo role ARN
+        run: echo "ROLE=${{ secrets.DEV_AWS_ROLE_ARN }}"
+
+      - name: Show workflow file ref
+        run: |
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "workflow_ref=${{ github.workflow_ref }}"
+
       - name: Build (Vite)
         run: npm run build -- --mode $VITE_MODE
-
-      - run: echo "ROLE=${{ secrets.DEV_AWS_ROLE_ARN }}"
 
       - name: Debug OIDC claims
         run: |
