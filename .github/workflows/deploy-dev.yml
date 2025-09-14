@@ -1,0 +1,63 @@
+name: Deploy DEV (S3 + CloudFront)
+
+on:
+  push:
+    branches: [ "dev" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: true
+    env:
+      S3_BUCKET: ${{ vars.DEV_BUCKET }}
+      CF_DISTRIBUTION_ID: ${{ vars.DEV_CF_DISTRIBUTION_ID }}
+      VITE_MODE: staging   # при необходимости использует .env.staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (Vite)
+        run: npm run build -- --mode $VITE_MODE
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.DEV_AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync assets (long cache)
+        run: |
+          aws s3 sync dist s3://$S3_BUCKET --delete \
+            --exclude "index.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Upload index.html (no cache)
+        run: |
+          aws s3 cp dist/index.html s3://$S3_BUCKET/index.html \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --content-type "text/html"
+
+      - name: Invalidate HTML only
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CF_DISTRIBUTION_ID \
+            --paths "/index.html" "/"
