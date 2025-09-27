@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react'
 
-import { BaseInput, type BaseInputProps } from "./BaseInput";
+import { BaseInput, type BaseInputProps } from './BaseInput'
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export interface EmailInputProps extends Omit<BaseInputProps, "type"> {
-  invalidEmailMessage?: string;
-  requiredMessage?: string;
+export interface EmailInputProps extends Omit<BaseInputProps, 'type'> {
+  invalidEmailMessage?: string
+  requiredMessage?: string
 }
 
 export const EmailInput = ({
@@ -14,53 +14,51 @@ export const EmailInput = ({
   setValue,
   hint,
   required = false,
-  autoComplete = "email",
-  invalidEmailMessage = "Invalid email address",
-  requiredMessage = "Email is required",
-  placeholder = "name@example.com",
+  autoComplete = 'email',
+  invalidEmailMessage = 'Invalid email address',
+  requiredMessage = 'Email is required',
+  placeholder = 'name@example.com',
   ...rest
 }: EmailInputProps) => {
   const computeError = useCallback(
     (currentValue: string): string | null => {
-      const trimmed = currentValue.trim();
+      const trimmed = currentValue.trim()
 
       if (!trimmed) {
-        return required ? requiredMessage : null;
+        return required ? requiredMessage : null
       }
 
-      return EMAIL_REGEX.test(trimmed) ? null : invalidEmailMessage;
+      return EMAIL_REGEX.test(trimmed) ? null : invalidEmailMessage
     },
-    [invalidEmailMessage, required, requiredMessage]
-  );
+    [invalidEmailMessage, required, requiredMessage],
+  )
 
-  const [touched, setTouched] = useState(() => Boolean(value));
-  const [error, setError] = useState<string | null>(() =>
-    value ? computeError(value) : null
-  );
+  const [touched, setTouched] = useState(() => Boolean(value))
+  const [error, setError] = useState<string | null>(() => (value ? computeError(value) : null))
 
   useEffect(() => {
     if (value && !touched) {
-      setTouched(true);
+      setTouched(true)
     }
 
-    if (!touched && value === "") {
-      return;
+    if (!touched && value === '') {
+      return
     }
 
-    const nextError = computeError(value);
+    const nextError = computeError(value)
 
-    setError((prev) => (prev === nextError ? prev : nextError));
-  }, [value, touched, computeError]);
+    setError((prev) => (prev === nextError ? prev : nextError))
+  }, [value, touched, computeError])
 
   const handleChange = (nextValue: string) => {
     if (!touched) {
-      setTouched(true);
+      setTouched(true)
     }
 
-    setValue(nextValue);
+    setValue(nextValue)
 
-    setError(computeError(nextValue));
-  };
+    setError(computeError(nextValue))
+  }
 
   return (
     <div>
@@ -82,5 +80,5 @@ export const EmailInput = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

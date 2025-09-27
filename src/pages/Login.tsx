@@ -1,4 +1,4 @@
-import { LoginForm } from "../widget/LoginForm"
+import { LoginForm } from '../widget/LoginForm'
 
 export const Login = () => {
   return (

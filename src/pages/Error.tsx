@@ -1,18 +1,18 @@
-import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom'
 
 export default function ErrorPage() {
-  const error = useRouteError();
+  const error = useRouteError()
 
-  let title = 'Что-то пошло не так';
-  let description = 'Произошла непредвиденная ошибка.';
+  let title = 'Что-то пошло не так'
+  let description = 'Произошла непредвиденная ошибка.'
 
   if (isRouteErrorResponse(error)) {
     if (error.status === 404) {
-      title = 'Страница не найдена';
-      description = 'Мы не смогли найти такую страницу.';
+      title = 'Страница не найдена'
+      description = 'Мы не смогли найти такую страницу.'
     } else {
-      title = `Ошибка ${error.status}`;
-      description = error.statusText || description;
+      title = `Ошибка ${error.status}`
+      description = error.statusText || description
     }
   }
 
@@ -31,7 +31,5 @@ export default function ErrorPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
-
-
