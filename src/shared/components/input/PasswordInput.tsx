@@ -126,11 +126,13 @@ export const PasswordInput = ({
         placeholder={placeholder}
         {...rest}
       />
-      {error && (
-        <p className="text-xs text-destructive mt-1" role="alert">
-          {error}
-        </p>
-      )}
+      <div className="min-h-[1.25rem] mt-1">
+        {error && (
+          <p className="text-xs text-destructive mt-1" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
