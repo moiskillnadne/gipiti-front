@@ -2,22 +2,25 @@ import { useState } from 'react'
 import { EmailInput } from '../../shared/components/input/EmailInput'
 import { PasswordInput } from '../../shared/components/input/PasswordInput'
 import { Link } from 'react-router-dom'
+import { useLoginMutation } from './lib/useLoginMutation'
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutateAsync, isPending } = useLoginMutation({
+    onSuccess(data) {
+      console.log('Login success:', data)
+
+      // TODO: redirect to home page
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
 
-    // TODO: заменить на реальную логику авторизации
     console.log('Login attempt:', { email, password })
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
+    await mutateAsync({ email, password })
   }
 
   return (
@@ -48,10 +51,10 @@ export const LoginForm = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isPending}
             className="w-full h-12 inline-flex items-center justify-center rounded-[var(--radius-lg)] border border-border bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 text-sm font-semibold uppercase tracking-[0.2em] text-foreground shadow-sm transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background disabled:opacity-50 disabled:pointer-events-none"
           >
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isPending ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
