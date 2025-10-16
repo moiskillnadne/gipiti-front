@@ -19,10 +19,9 @@ export const SignupForm = () => {
   })
   
 
-  const handleSignupSuccess = useCallback((email: string) => {
+  const handleSignupSuccess = useCallback(() => {
     setStep("confirmSignup")
-    setEmail(email)
-  }, [setEmail, setStep])
+  }, [setStep])
 
   const handleConfirmSignupSuccess = useCallback(() => {
     login({ email, password })
@@ -34,7 +33,7 @@ export const SignupForm = () => {
       {step === "signup" ? (
         <SignupFormStep onSignupSuccess={handleSignupSuccess} email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
       ) : (
-        <ConfirmSignupFormStep email={email} onConfirmSignupSuccess={handleConfirmSignupSuccess} />
+        <ConfirmSignupFormStep email={email} setStep={setStep} onConfirmSignupSuccess={handleConfirmSignupSuccess} />
       )}
     </div>
   )

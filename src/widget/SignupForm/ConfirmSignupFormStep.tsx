@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { BaseInput } from "../../shared/components/input/BaseInput"
 import { useConfirmSignupMutation } from "../../entity/user/hooks/useConfirmSignupMutation"
-import { Link } from "react-router-dom"
 import { useResendConfirmationCodeMutation } from "../../entity/user/hooks/useResendConfirmationCodeMutation"
 
 
 type Props = {
   email: string
+  setStep: (step: 'signup' | 'confirmSignup') => void
   onConfirmSignupSuccess?: () => void
 }
 
@@ -88,12 +88,13 @@ export const ConfirmSignupFormStep = (props: Props) => {
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
           Do you want to change your email?{' '}
-          <Link
-            to="/signup"
+          <button
+            type="button"
+            onClick={() => props.setStep('signup')}
             className="text-foreground hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background"
           >
             Change email
-          </Link>
+          </button>
         </div>
       </div>
   )
