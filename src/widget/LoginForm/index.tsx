@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import { EmailInput } from '../../shared/components/input/EmailInput'
 import { PasswordInput } from '../../shared/components/input/PasswordInput'
-import { Link } from 'react-router-dom'
-import { useLoginMutation } from './lib/useLoginMutation'
+import { Link, useNavigate } from 'react-router-dom'
+import { useLoginMutation } from '../../entity/user/hooks/useLoginMutation'
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+  
   const { mutateAsync, isPending } = useLoginMutation({
     onSuccess(data) {
       console.log('Login success:', data)
 
-      // TODO: redirect to home page
+      setTimeout(() => {
+        return navigate('/protected/profile')
+      }, 100)
     },
   })
 
