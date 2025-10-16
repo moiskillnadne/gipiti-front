@@ -21,7 +21,7 @@ jobs:
     env:
       S3_BUCKET: ${{ vars.DEV_BUCKET }}
       CF_DISTRIBUTION_ID: ${{ vars.DEV_CF_DISTRIBUTION_ID }}
-      VITE_MODE: staging   # при необходимости использует .env.staging
+      VITE_MODE: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,6 +34,12 @@ jobs:
 
       - name: Install deps
         run: npm ci
+
+      - name: Setup environment variables
+        run: |
+          cat <<EOF > .env.dev
+          VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}
+          EOF
 
       - name: Build (Vite)
         run: npm run build -- --mode $VITE_MODE
